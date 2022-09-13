@@ -1,0 +1,15 @@
+{
+    "Kafka": {
+        "TopicConfig": {
+            "Broker": "10.167.33.74:12191",
+            "MessageCount": 1,
+            "ClientId": "client1",
+            "TopicName": "device-metadata-update",
+            "GroupIdConfig": "iec104-devices",
+            "MaxNoMessageFoundCount": 100,
+            "OffsetResetLatest": "latest",
+            "OffsetResetEarlier": "earliest",
+            "MaxPollRecords": 1
+        }
+    }
+}

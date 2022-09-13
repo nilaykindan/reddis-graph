@@ -1,0 +1,51 @@
+<configuration scan="true" scanPeriod="5 minutes">
+    <property name="LOG_DIR" value="./logs" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level  [%X{deviceSerial}] [%thread] [%logger{0}] %msg%n</pattern>
+            <!-- %date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n -->
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Filter by level -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- TODO: Discuss how many days and how much size needed for logs? -->
+            <!-- keep log for 7 days, limited by 1GB TOTAL size -->
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%logger{0}] %mdc %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="SIFTING" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <Discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
+            <Key>deviceSerial</Key>
+            <defaultValue>NA</defaultValue>
+        </Discriminator>
+        <sift>
+            <appender name="${deviceSerial}" class="ch.qos.logback.core.FileAppender">
+                <file>./per-device-logs/${deviceSerial}.log</file>
+                <layout class="ch.qos.logback.classic.PatternLayout">
+                    <pattern>%h %l %u %t \"%r\" %s %b</pattern>
+                </layout>
+            </appender>
+        </sift>
+    </appender>
+
+    <logger name="org.apache.kafka" level="OFF" />
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="SIFTING" />
+    </root>
+</configuration>

@@ -1,0 +1,16 @@
+kafkaClient:
+  producer:
+    # Kafka Topic'e en fazla kaç defa mesaj göndermeye çalışacağı, değiştirilmesi tavsiye edilmez.
+    maxRetryAttempts: 3
+    # Kafka Topic'e defa mesaj gönderme Timeoout süresi, değiştirilmesi tavsiye edilmez.
+    requestTimeoutSeconds: 5
+    # Kafka Topic'e işleminde iki retry arası bekleme süresi, değiştirilmesi tavsiye edilmez.
+    initialRetrySeconds: 1
+    # Kafka'ya gönderilemeyen mesajların tekrar gönderiminin hangi sıklıkla tekrar deneneceği
+    unsentMessageProcessMilliseconds: 30000
+    # Kafka'ya gönderilemeyen mesajların tekrar gönderiminde tek seferde kaç mesajın işleneceği (memory hatasının önüne geçmek için)
+    unsentMessageProcessLimit: 100
+  # CQRS Handler, CRUD Handler ve Payload da kullanılacak sınıfların bulunduğu paketlerin listesi
+  # Uygulama bazında ayarlanması gerekiyor.
+  basePackages:
+    - com
